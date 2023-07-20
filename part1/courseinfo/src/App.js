@@ -44,6 +44,8 @@ const Part = (props) => {
   );
 };
 
+
+
 const Total = (props) => {
   let totalExe = 0;
   props.parts.forEach((ele) => {
@@ -51,5 +53,6 @@ const Total = (props) => {
   });
   return <p>Number of exercises {totalExe}</p>;
 };
+
 
 export default App;
