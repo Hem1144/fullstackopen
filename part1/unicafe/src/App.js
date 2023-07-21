@@ -1,5 +1,22 @@
 import { useState } from "react";
 
+const Statistics = ({ good, neutral, bad, all, averageFun, positiveFun }) => {
+  if (averageFun()) {
+    return (
+      <>
+        <p>good {good}</p>
+        <p>neutral {neutral}</p>
+        <p>bad {bad}</p>
+        <p>all {all}</p>
+        <p>average {averageFun()}</p>
+        <p>postive {positiveFun()} % </p>
+      </>
+    );
+  } else {
+    return "No feedback given";
+  }
+};
+
 const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0);
@@ -18,15 +35,13 @@ const App = () => {
 
   let total = good + neutral + bad;
 
-  let avg = 0;
-  if (good > 0 || neutral > 0 || bad > 0) {
-    avg = (good - bad) / total;
-  }
+  const avgFunc = () => {
+    return (good - bad) / total;
+  };
 
-  let pos = 0;
-  if (good > 0 || neutral > 0 || bad > 0) {
-    pos = (good / total) * 100;
-  }
+  const posFunc = () => {
+    return (good / total) * 100;
+  };
 
   return (
     <>
@@ -40,12 +55,14 @@ const App = () => {
       </div>
       <h1>statistics</h1>
       <div>
-        <p>good {good}</p>
-        <p>neutral {neutral}</p>
-        <p>bad {bad}</p>
-        <p>all {total} </p>
-        <p>average {avg} </p>
-        <p>positive {pos}% </p>
+        <Statistics
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          all={total}
+          averageFun={avgFunc}
+          positiveFun={posFunc}
+        />
       </div>
     </>
   );
