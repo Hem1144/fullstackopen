@@ -16,6 +16,18 @@ const App = () => {
     setBad(bad + 1);
   };
 
+  let total = good + neutral + bad;
+
+  let avg = 0;
+  if (good > 0 || neutral > 0 || bad > 0) {
+    avg = (good - bad) / total;
+  }
+
+  let pos = 0;
+  if (good > 0 || neutral > 0 || bad > 0) {
+    pos = (good / total) * 100;
+  }
+
   return (
     <>
       <div>
@@ -31,6 +43,9 @@ const App = () => {
         <p>good {good}</p>
         <p>neutral {neutral}</p>
         <p>bad {bad}</p>
+        <p>all {total} </p>
+        <p>average {avg} </p>
+        <p>positive {pos}% </p>
       </div>
     </>
   );
