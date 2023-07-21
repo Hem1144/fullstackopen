@@ -41,7 +41,7 @@ const App = () => {
   };
 
   const posFunc = () => {
-    return (good / total) * 100;
+    return ((good / total) * 100).toFixed(1);
   };
 
   return (
