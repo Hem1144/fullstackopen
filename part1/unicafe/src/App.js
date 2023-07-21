@@ -1,16 +1,18 @@
 import { useState } from "react";
 
 const Statistics = ({ good, neutral, bad, all, averageFun, positiveFun }) => {
-  if (averageFun()) {
+  if (all) {
     return (
-      <>
-        <StatisticsLine text="good" value={good} />
-        <StatisticsLine text="neutral" value={neutral} />
-        <StatisticsLine text="bad" value={bad} />
-        <StatisticsLine text="all" value={all} />
-        <StatisticsLine text="average" value={averageFun()} />
-        <StatisticsLine text="positive" value={positiveFun()} />
-      </>
+      <table>
+        <tbody>
+          <StatisticsLine text="good" value={good} />
+          <StatisticsLine text="neutral" value={neutral} />
+          <StatisticsLine text="bad" value={bad} />
+          <StatisticsLine text="all" value={all} />
+          <StatisticsLine text="average" value={averageFun()} />
+          <StatisticsLine text="positive" value={positiveFun()} />
+        </tbody>
+      </table>
     );
   } else {
     return "No feedback given";
@@ -18,7 +20,6 @@ const Statistics = ({ good, neutral, bad, all, averageFun, positiveFun }) => {
 };
 
 const App = () => {
-  // save clicks of each button to its own state
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
@@ -33,10 +34,10 @@ const App = () => {
     setBad(bad + 1);
   };
 
-  let total = good + neutral + bad;
+  let total = good + Number(neutral) + bad;
 
   const avgFunc = () => {
-    return (good - bad) / total;
+    return ((good - bad) / total).toFixed(1);
   };
 
   const posFunc = () => {
@@ -70,9 +71,10 @@ const App = () => {
 
 const StatisticsLine = (props) => {
   return (
-    <p>
-      {props.text} {props.value}
-    </p>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.value}</td>
+    </tr>
   );
 };
 
