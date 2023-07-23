@@ -1,75 +1,56 @@
-import { useState } from "react";
-const Statistics = ({ good, neutral, bad, all, averageFun, positiveFun }) => {
-  if (all) {
-    return (
-      <table>
-        <tbody>
-          <StatisticsLine text="good" value={good} />
-          <StatisticsLine text="neutral" value={neutral} />
-          <StatisticsLine text="bad" value={bad} />
-          <StatisticsLine text="all" value={all} />
-          <StatisticsLine text="average" value={averageFun()} />
-          <StatisticsLine text="positive" value={positiveFun()} />
-        </tbody>
-      </table>
-    );
-  } else {
-    return "No feedback given";
-  }
-};
-const App = () => {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
-  const goodClicker = () => {
-    setGood(good + 1);
+function App() {
+  const course = {
+    name: "Half Stack application development",
+    parts: [
+      {
+        name: "Fundamentals of React",
+        exercises: 10,
+      },
+      {
+        name: "Using props to pass data",
+        exercises: 7,
+      },
+      {
+        name: "State of a component",
+        exercises: 14,
+      },
+    ],
   };
-  const neutralClicker = () => {
-    setNeutral(neutral + 1);
-  };
-  const badClicker = () => {
-    setBad(bad + 1);
-  };
-  let total = good + Number(neutral) + bad;
-  const avgFunc = () => {
-    return ((good - bad) / total).toFixed(1);
-  };
-
-  const posFunc = () => {
-    return (good / total) * 100;
-    return ((good / total) * 100).toFixed(1);
-  };
-
   return (
-    <>
-      <div>
-        <h1>give feedback</h1>
-      </div>
-      <div>
-        <button onClick={goodClicker}>good</button>
-        <button onClick={neutralClicker}>neutral</button>
-        <button onClick={badClicker}>bad</button>
-      </div>
-      <h1>statistics</h1>
-      <div>
-        <Statistics
-          good={good}
-          neutral={neutral}
-          bad={bad}
-          all={total}
-          averageFun={avgFunc}
-          positiveFun={posFunc}
-        />
-      </div>
-    </>
+    <div>
+      <Header course={course.name} />
+      <Content parts={course.parts} />
+      <Total parts={course.parts} />
+    </div>
+  );
+}
+
+const Header = (props) => {
+  return (
+    <div>
+      <h1>{props.course}</h1>
+    </div>
   );
 };
-const StatisticsLine = (props) => {
+
+const Content = (props) => {
+  return props.parts.map((props, index) => (
+    <Part part={props.name} exercises={props.exercises} key={index} />
+  ));
+};
+
+const Part = (props) => {
   return (
-    <tr>
-      <td>{props.text}</td>
-      <td>{props.value}</td>
-    </tr>
+    <p>
+      {props.part} {props.exercises}
+    </p>
   );
 };
-export default App;
+
+const Total = (props) => {
+  let totalExercise = 0;
+  props.parts.map((ele) => {
+    return (totalExercise += ele.exercises);
+  });
+  return <p>Number of exercises {totalExercise}</p>;
+};
