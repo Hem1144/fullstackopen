@@ -54,3 +54,4 @@ const Total = (props) => {
   });
   return <p>Number of exercises {totalExercise}</p>;
 };
+export default App;
