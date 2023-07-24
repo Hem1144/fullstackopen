@@ -1,6 +1,7 @@
 import React from "react";
 
 const Total = ({ sum }) => {
+  console.log(sum)
   return (
     <>
       <p>
@@ -10,6 +11,7 @@ const Total = ({ sum }) => {
             (accum, currentVal) => (accum += currentVal.exercises),
             0
           )}
+
           <span> exercises</span>
         </b>
       </p>
