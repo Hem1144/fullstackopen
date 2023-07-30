@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import fromService from "./services/person";
 
 const Filter = ({ searchTerm, handleSearchChange }) => {
   return (
@@ -20,7 +20,7 @@ const PersonForm = ({
   return (
     <form onSubmit={addPerson}>
       <div>
-        name: <input value={newName} onChange={handleNameChange} />
+        name: <input type="text" value={newName} onChange={handleNameChange} />
       </div>
       <div>
         number:{" "}
@@ -53,9 +53,8 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log(response);
-      setPersons(response.data);
+    fromService.getAll().then((res) => {
+      setPersons(res);
     });
   }, []);
 
@@ -83,13 +82,14 @@ const App = () => {
       return;
     }
 
-    const changeDb = {
+    const personAdd = {
       name: newName,
       number: newNumber,
       id: persons.length + 1,
     };
-    axios
-      .post("http://localhost:3001/persons", changeDb)
+
+    fromService
+      .addPerson(personAdd)
       .then((res) => setPersons(persons.concat(res.data)));
     setNewName("");
     setNewNumber("");
