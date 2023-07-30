@@ -23,7 +23,8 @@ const PersonForm = ({
         name: <input value={newName} onChange={handleNameChange} />
       </div>
       <div>
-        number: <input value={newNumber} onChange={handleNumberChange} />
+        number:{" "}
+        <input type="number" value={newNumber} onChange={handleNumberChange} />
       </div>
       <div>
         <button type="submit">add</button>
@@ -82,12 +83,14 @@ const App = () => {
       return;
     }
 
-    const newPerson = {
+    const changeDb = {
       name: newName,
       number: newNumber,
       id: persons.length + 1,
     };
-    setPersons(persons.concat(newPerson));
+    axios
+      .post("http://localhost:3001/persons", changeDb)
+      .then((res) => setPersons(persons.concat(res.data)));
     setNewName("");
     setNewNumber("");
   };
