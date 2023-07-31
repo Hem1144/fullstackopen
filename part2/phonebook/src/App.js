@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import fromService from "./services/person";
+import Persons from "./Persons";
 
 const Filter = ({ searchTerm, handleSearchChange }) => {
   return (
@@ -30,18 +31,6 @@ const PersonForm = ({
         <button type="submit">add</button>
       </div>
     </form>
-  );
-};
-
-const Persons = ({ persons }) => {
-  return (
-    <>
-      {persons.map((person) => (
-        <div key={person.id}>
-          {person.name} {person.number}
-        </div>
-      ))}
-    </>
   );
 };
 
@@ -119,7 +108,7 @@ const App = () => {
 
       <h3>Numbers</h3>
 
-      <Persons persons={filteredPersons} />
+      <Persons persons={filteredPersons} setPersons={setPersons} />
     </div>
   );
 };
