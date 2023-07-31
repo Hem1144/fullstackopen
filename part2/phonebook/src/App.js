@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+
 import personService from "./services/person";
+
 import Persons from "./Persons";
 
 const Filter = ({ searchTerm, handleSearchChange }) => {
@@ -131,6 +133,8 @@ const App = () => {
       <h3>Numbers</h3>
 
       <Persons persons={filteredPersons} handleDelete={handleDelete} />
+
+      <Persons persons={filteredPersons} setPersons={setPersons} />
     </div>
   );
 };

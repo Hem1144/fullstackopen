@@ -27,5 +27,4 @@ const personService = {
   updatePerson,
   deletePerson,
 };
-
 export default personService;
