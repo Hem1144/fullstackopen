@@ -5,6 +5,7 @@ function App() {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);
 
   useEffect(() => {
     axios
@@ -16,11 +17,24 @@ function App() {
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
-    setSelectedCountry(null); // Reset the selected country when searching
+    setSelectedCountry(null);
   };
 
   const handleShowCountry = (country) => {
     setSelectedCountry(country);
+    getWeatherData(country.capital);
+  };
+
+  const getWeatherData = (capital) => {
+    const apiKey = process.env.REACT_APP_API_KEY;
+    console.log(apiKey);
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${apiKey}`;
+    console.log(apiUrl);
+
+    axios.get(apiUrl).then((response) => {
+      console.log(response);
+      setWeatherData(response.data);
+    });
   };
 
   const filteredCountries = countries.filter((country) =>
@@ -30,7 +44,7 @@ function App() {
   return (
     <>
       <div>
-        <label>find countries: </label>
+        <label>Find countries: </label>
         <input type="text" value={search} onChange={handleSearchChange} />
       </div>
       {selectedCountry ? (
@@ -49,6 +63,18 @@ function App() {
             alt={`${selectedCountry.name.common} flag`}
             style={{ maxWidth: "200px" }}
           />
+          {weatherData ? (
+            <div>
+              <h3>Weather in {selectedCountry.capital}</h3>
+              <p>description: {weatherData.weather[0].description}</p>
+              <p>
+                temperature: {(weatherData.main.temp - 273.15).toFixed(1)} °C
+              </p>
+              <p>humidity: {weatherData.main.humidity}%</p>
+            </div>
+          ) : (
+            <p>Loading weather data...</p>
+          )}
           <button onClick={() => setSelectedCountry(null)}>Back</button>
         </div>
       ) : (
