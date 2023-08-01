@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import personService from "./services/person";
 import Persons from "./Persons";
 import Notification from "./components/Notification";
-
+import "./";
 const Filter = ({ searchTerm, handleSearchChange }) => {
   return (
     <div>
@@ -128,6 +128,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification?.message} type={notification?.type} />
       <Filter searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
       <h3>Add a new</h3>
       <PersonForm
@@ -141,8 +142,6 @@ const App = () => {
       <h3>Numbers</h3>
 
       <Persons persons={filteredPersons} handleDelete={handleDelete} />
-
-      <Persons persons={filteredPersons} setPersons={setPersons} />
     </div>
   );
 };
