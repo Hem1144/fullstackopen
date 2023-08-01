@@ -4,6 +4,7 @@ import axios from "axios";
 function App() {
   const [search, setSearch] = useState("");
   const [countries, setCountries] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState(null);
 
   useEffect(() => {
     axios
@@ -15,6 +16,11 @@ function App() {
 
   const handleSearchChange = (event) => {
     setSearch(event.target.value);
+    setSelectedCountry(null); // Reset the selected country when searching
+  };
+
+  const handleShowCountry = (country) => {
+    setSelectedCountry(country);
   };
 
   const filteredCountries = countries.filter((country) =>
@@ -24,37 +30,67 @@ function App() {
   return (
     <>
       <div>
-        <label>find countries </label>
+        <label>find countries: </label>
         <input type="text" value={search} onChange={handleSearchChange} />
       </div>
-      {filteredCountries.length > 10 ? (
-        <p>too many matches, specify another filter</p>
-      ) : filteredCountries.length > 1 ? (
-        <ul>
-          {filteredCountries.map((country) => (
-            <p key={country.name.common}>{country.name.common}</p>
-          ))}
-        </ul>
-      ) : filteredCountries.length === 1 ? (
+      {selectedCountry ? (
         <div>
-          <h2>{filteredCountries[0].name.common}</h2>
-          <p>capital: {filteredCountries[0].capital}</p>
-          <p>area: {filteredCountries[0].area} </p>
-          <h4>languages: </h4>
+          <h2>{selectedCountry.name.common}</h2>
+          <p>Capital: {selectedCountry.capital}</p>
+          <p>Area: {selectedCountry.area}</p>
+          <h4>Languages: </h4>
           <ul>
-            {Object.values(filteredCountries[0].languages).map((lang) => (
-              <li key={lang}>{lang}</li>
+            {Object.values(selectedCountry.languages).map((lang, index) => (
+              <li key={index}>{lang}</li>
             ))}
           </ul>
-
           <img
-            src={filteredCountries[0].flags.png}
-            alt={`${filteredCountries[0].name.common} flag`}
+            src={selectedCountry.flags.png}
+            alt={`${selectedCountry.name.common} flag`}
             style={{ maxWidth: "200px" }}
           />
+          <button onClick={() => setSelectedCountry(null)}>Back</button>
         </div>
       ) : (
-        <p>No countries found.</p>
+        <>
+          {filteredCountries.length > 10 ? (
+            <p>Too many matches, specify another filter</p>
+          ) : filteredCountries.length > 1 ? (
+            <ul>
+              {filteredCountries.map((country) => (
+                <div key={country.name.common}>
+                  <p>
+                    {country.name.common}
+                    <button onClick={() => handleShowCountry(country)}>
+                      Show
+                    </button>
+                  </p>
+                </div>
+              ))}
+            </ul>
+          ) : filteredCountries.length === 1 ? (
+            <div>
+              <h2>{filteredCountries[0].name.common}</h2>
+              <p>Capital: {filteredCountries[0].capital}</p>
+              <p>Area: {filteredCountries[0].area} </p>
+              <h4>Languages: </h4>
+              <ul>
+                {Object.values(filteredCountries[0].languages).map(
+                  (lang, index) => (
+                    <li key={index}>{lang}</li>
+                  )
+                )}
+              </ul>
+              <img
+                src={filteredCountries[0].flags.png}
+                alt={`${filteredCountries[0].name.common} flag`}
+                style={{ maxWidth: "200px" }}
+              />
+            </div>
+          ) : (
+            <p>No countries found.</p>
+          )}
+        </>
       )}
     </>
   );
