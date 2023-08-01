@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import personService from "./services/person";
 import Persons from "./Persons";
 import Notification from "./components/Notification";
-import "./";
 const Filter = ({ searchTerm, handleSearchChange }) => {
   return (
     <div>
@@ -113,9 +112,18 @@ const App = () => {
   const handleDelete = (id, name) => {
     const confirmed = window.confirm(`Delete ${name} ?`);
     if (confirmed) {
-      personService.deletePerson(id).then(() => {
-        setPersons(persons.filter((person) => person.id !== id));
-      });
+      personService
+        .deletePerson(id)
+        .then(() => {
+          setPersons(persons.filter((person) => person.id !== id));
+          showNotification(`Deleted ${name}`, "success");
+        })
+        .catch((error) => {
+          showNotification(
+            `Information of ${name} has already been removed from server`,
+            "error"
+          );
+        });
     }
   };
 
