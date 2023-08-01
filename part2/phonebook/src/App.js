@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-
 import personService from "./services/person";
-
 import Persons from "./Persons";
+import Notification from "./components/Notification";
 
 const Filter = ({ searchTerm, handleSearchChange }) => {
   return (
@@ -41,6 +40,14 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [notification, setNotification] = useState(null);
+
+  const showNotification = (message, type) => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 2000);
+  };
 
   useEffect(() => {
     personService.getAll().then((res) => {
@@ -98,6 +105,7 @@ const App = () => {
         setPersons(persons.concat(res));
         setNewName("");
         setNewNumber("");
+        showNotification(`Added ${res.name}`, "success");
       });
     }
   };
