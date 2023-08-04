@@ -1,8 +1,7 @@
 const express = require("express");
 const app = express();
-const port = 3001;
 
-const phonebookEntries = [
+const phonebook = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -26,9 +25,22 @@ const phonebookEntries = [
 ];
 
 app.get("/api/persons", (req, res) => {
-  res.json(phonebookEntries);
+  res.json(phonebook);
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+app.get("/info", (req, res) => {
+  const currentTime = new Date().toString();
+  const num = phonebook.length;
+  const info = `
+    <div>
+      <p>Phonebook has info for ${num} people</p>
+      <p>${currentTime}</p>
+    </div>
+  `;
+  res.send(info);
+});
+
+const PORT = 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
