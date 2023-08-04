@@ -1,5 +1,11 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
+const morgan = require("morgan");
+morgan.token("body", (req) => JSON.stringify(req.body));
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+);
 
 const phonebook = [
   {
@@ -50,8 +56,6 @@ app.get("/info", (req, res) => {
   `;
   res.send(info);
 });
-
-app.use(express.json());
 
 app.post("/api/persons", (req, res) => {
   const body = req.body;
