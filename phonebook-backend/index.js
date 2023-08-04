@@ -54,17 +54,29 @@ app.get("/info", (req, res) => {
 app.use(express.json());
 
 app.post("/api/persons", (req, res) => {
-  const { name, number } = req.body;
-  if (!name || !number) {
-    return res.status(400).json({ error: "Name or number is missing" });
+  const body = req.body;
+
+  if (!body.name || !body.number) {
+    return res.status(400).json({ error: "name and number are required" });
   }
 
-  const id = Math.floor(Math.random() * 10000);
-  const newPerson = { id, name, number };
-  phonebook.push(newPerson);
+  if (phonebook.some((entry) => entry.name === body.name)) {
+    return res.status(400).json({ error: "name must be unique" });
+  }
 
-  res.json(newPerson);
+  const newEntry = {
+    id: generateId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  phonebook.push(newEntry);
+  res.json(newEntry);
 });
+
+const generateId = () => {
+  return Math.floor(Math.random() * 100000);
+};
 
 app.delete("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
