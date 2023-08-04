@@ -51,6 +51,21 @@ app.get("/info", (req, res) => {
   res.send(info);
 });
 
+app.use(express.json());
+
+app.post("/api/persons", (req, res) => {
+  const { name, number } = req.body;
+  if (!name || !number) {
+    return res.status(400).json({ error: "Name or number is missing" });
+  }
+
+  const id = Math.floor(Math.random() * 10000);
+  const newPerson = { id, name, number };
+  phonebook.push(newPerson);
+
+  res.json(newPerson);
+});
+
 app.delete("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
   let notes = phonebook.filter((note) => note.id !== id);
