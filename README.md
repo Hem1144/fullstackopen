@@ -1,3 +1,7 @@
 ### Hosted url for backend
 
-https://hemlal-dulal.onrender.com/api/persons
+orl: https://hemlal-dulal.onrender.com/api/persons
+
+### Deployed frontend and backend both once
+
+url: https://hemlal-dulal.onrender.com
