@@ -31,6 +31,14 @@ const noteSchema = new mongoose.Schema({
   number: String,
 });
 
+noteSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+  },
+});
+
 const Note = mongoose.model("Note", noteSchema);
 
 app.get("/api/persons", (req, res) => {
@@ -97,7 +105,7 @@ app.delete("/api/persons/:id", (req, res) => {
 
   Note.findByIdAndRemove(id)
     .then(() => {
-      res.status(204).end();
+      res.status(204).end("Item is deleted");
     })
 
     .catch((error) => {
@@ -105,6 +113,21 @@ app.delete("/api/persons/:id", (req, res) => {
       res.status(500).send("Error deleting person.");
     });
 });
+
+// Defining a middleware function for handling errors
+const errorHandler = (error, req, res, next) => {
+  console.error("Error:", error.message);
+
+  if (error.name === "CastError" && error.kind === "ObjectId") {
+    return res.status(400).send("Malformatted ID");
+  } else if (error.name === "ValidationError") {
+    return res.status(400).json({ error: error.message });
+  }
+
+  next(error);
+};
+// Add the error handler middleware to the app
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

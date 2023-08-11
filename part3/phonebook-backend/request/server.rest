@@ -1,6 +1,21 @@
 GET http://localhost:3001/api/persons
 
 ###
+
+GET http://localhost:3001/api/persons/64d5f34a92f65c73a9a8ca52
+
+
+
+###
+POST http://localhost:3001/api/persons
+content-type: application/json
+
+{
+    "name": "New Note",
+    "number": "9845894"
+}
+
+###
 POST http://localhost:3001/api/persons
 content-type: application/json
 
