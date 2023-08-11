@@ -114,7 +114,7 @@ app.delete("/api/persons/:id", (req, res) => {
     });
 });
 
-// Defining a middleware function for handling errors
+// Defining a middleware function for handling errors in the code
 const errorHandler = (error, req, res, next) => {
   console.error("Error:", error.message);
 
