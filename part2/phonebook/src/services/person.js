@@ -8,7 +8,9 @@ const getAll = () => {
 };
 
 const addPerson = (newPerson) => {
-  return axios.post(baseUrl, newPerson).then((response) => response.data);
+  return axios
+    .post(baseUrl, newPerson)
+    .then((response) => response.data);
 };
 
 const updatePerson = (id, updatedPerson) => {

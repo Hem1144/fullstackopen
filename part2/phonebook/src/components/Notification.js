@@ -6,7 +6,13 @@ const Notification = ({ message, type }) => {
     return null;
   }
 
-  return <div className={`notification ${type}`}>{message}</div>;
+  return (
+    <div
+      className={`notification  ${type === "success" ? "success" : "error"}`}
+    >
+      {message}
+    </div>
+  );
 };
 
 export default Notification;

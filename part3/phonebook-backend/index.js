@@ -27,7 +27,11 @@ mongoose
   });
 
 const noteSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    minlength: 3,
+    required: true,
+  },
   number: String,
 });
 
@@ -61,24 +65,27 @@ app.get("/api/persons/:id", (req, res) => {
 app.post("/api/persons", (req, res) => {
   const body = req.body;
 
-  if (!body.name || !body.number) {
-    return res.status(400).json({ error: "name and number are required" });
-  }
+  Note.findOne({ name: body.name })
+    .then((existingPerson) => {
+      const newEntry = new Note({
+        name: body.name,
+        number: body.number,
+      });
 
-  Note.findOne({ name: body.name }).then((existingPerson) => {
-    if (existingPerson) {
-      return res.status(400).json({ error: "name must be unique" });
-    }
-
-    const newEntry = new Note({
-      name: body.name,
-      number: body.number,
+      newEntry
+        .save()
+        .then((savedNote) => {
+          res.json({ data: savedNote, status: "ok" });
+        })
+        .catch((error) => {
+          // Send the Mongoose error response to the client
+          return res.status(400).json({ error: error.message });
+        });
+    })
+    .catch((error) => {
+      // Send the Mongoose error response to the client
+      return res.status(400).json(error);
     });
-
-    newEntry.save().then((savedNote) => {
-      res.json(savedNote);
-    });
-  });
 });
 
 app.put("/api/persons/:id", (req, res) => {
@@ -90,7 +97,7 @@ app.put("/api/persons/:id", (req, res) => {
     number: body.number,
   };
 
-  Note.findByIdAndUpdate(id, updatedNote, { new: true })
+  Note.findByIdAndUpdate(id, updatedNote, { new: true, runValidators: true })
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })

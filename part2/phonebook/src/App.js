@@ -71,7 +71,7 @@ const App = () => {
     event.preventDefault();
 
     const existingPerson = persons.find(
-      (person) => person.name.toLowerCase() === newName.toLowerCase()
+      (person) => person?.name.toLowerCase() === newName?.toLowerCase()
     );
 
     if (existingPerson) {
@@ -83,14 +83,18 @@ const App = () => {
         personService
           .updatePerson(existingPerson.id, updatedPerson)
           .then((res) => {
-            setPersons(
-              persons.map((person) =>
+            setPersons((prevPersons) =>
+              prevPersons.map((person) =>
                 person.id === existingPerson.id ? res : person
               )
             );
+            showNotification(`Updated ${res.name}`, "success");
           })
           .catch((error) => {
-            alert(`Failed to update the number for ${newName}`, error);
+            showNotification(
+              `Failed to update ${existingPerson.name}`,
+              "error"
+            );
           });
       }
       setNewName("");
@@ -101,12 +105,17 @@ const App = () => {
         number: newNumber,
       };
 
-      personService.addPerson(personToAdd).then((res) => {
-        setPersons(persons.concat(res));
-        setNewName("");
-        setNewNumber("");
-        showNotification(`Added ${res.name}`, "success");
-      });
+      personService
+        .addPerson(personToAdd)
+        .then((res) => {
+          setPersons(persons.concat(res));
+          setNewName("");
+          setNewNumber("");
+          showNotification(`Added ${res.data.name}`, "success");
+        })
+        .catch((error) => {
+          showNotification(error.response.data.error, "error");
+        });
     }
   };
 
