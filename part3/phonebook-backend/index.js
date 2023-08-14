@@ -79,7 +79,7 @@ app.post("/api/persons", (req, res) => {
   const body = req.body;
 
   Note.findOne({ name: body.name })
-    .then((existingPerson) => {
+    .then(() => {
       const newEntry = new Note({
         name: body.name,
         number: body.number,
