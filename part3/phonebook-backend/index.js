@@ -26,13 +26,26 @@ mongoose
     console.error("Error connecting to MongoDB:", error.message);
   });
 
+const phoneNumberValidator = (number) => {
+  // Regular expression for validating phone number format
+  const phoneNumberRegex = /^[0-9]{2,3}-[0-9]{6,}$/;
+  return phoneNumberRegex.test(number);
+};
+
 const noteSchema = new mongoose.Schema({
   name: {
     type: String,
     minlength: 3,
     required: true,
   },
-  number: String,
+  number: {
+    type: String,
+    required: true,
+    validate: {
+      validator: phoneNumberValidator,
+      message: (props) => `${props.value} is not a valid phone number`,
+    },
+  },
 });
 
 noteSchema.set("toJSON", {

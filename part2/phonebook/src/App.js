@@ -26,7 +26,7 @@ const PersonForm = ({
       <div>
         <br />
         number:{" "}
-        <input type="number" value={newNumber} onChange={handleNumberChange} />
+        <input type="text" value={newNumber} onChange={handleNumberChange} />
       </div>
       <div>
         <button type="submit">add</button>
@@ -108,7 +108,7 @@ const App = () => {
       personService
         .addPerson(personToAdd)
         .then((res) => {
-          setPersons(persons.concat(res));
+          setPersons(persons.concat(res.data));
           setNewName("");
           setNewNumber("");
           showNotification(`Added ${res.data.name}`, "success");
