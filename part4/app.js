@@ -23,7 +23,6 @@ blogSchema.set("toJSON", {
     delete returnedObject._id;
     delete returnedObject.__v;
   },
-  
 });
 
 const Blog = mongoose.model("Blog", blogSchema);
@@ -42,7 +41,4 @@ app.post("/api/blogs", (request, response) => {
   });
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
-});
+module.exports = app;
