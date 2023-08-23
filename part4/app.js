@@ -3,9 +3,9 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
+const {url} = require("./utils/config");
 
-const mongoUrl = process.env.MONGODB_URI;
-mongoose.connect(mongoUrl);
+mongoose.connect(url);
 
 app.use(cors());
 app.use(express.json());
