@@ -17,6 +17,21 @@ app.get("/api/blogs", (request, response) => {
   });
 });
 
+app.get("/api/blogs/:id", async (request, response) => {
+  const id = request.params.id;
+
+  try {
+    const blog = await Blog.findById(id);
+    if (blog) {
+      response.json(blog);
+    } else {
+      response.status(404).end();
+    }
+  } catch (error) {
+    response.status(400).json({ error: "Invalid blog ID" });
+  }
+});
+
 app.post("/api/blogs", (request, response) => {
   const blogData = request.body;
 
@@ -50,7 +65,8 @@ app.put("/api/blogs/:id", async (request, response) => {
 });
 
 app.delete("/api/blogs/:id", async (request, response) => {
-  const id = request.params.id;
+  const id = req;
+  uest.params.id;
 
   try {
     await Blog.findByIdAndRemove(id);
