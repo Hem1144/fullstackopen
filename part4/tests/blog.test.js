@@ -24,7 +24,7 @@ beforeEach(async () => {
   await noteObject.save();
   noteObject = new Blog(initialBlogs[1]);
   await noteObject.save();
-});
+}, 10000);
 
 const api = supertest(app);
 

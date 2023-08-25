@@ -6,7 +6,7 @@ POST http://localhost:3003/api/blogs/
 content-type: application/json
 
 {
-    "title": "This Book",
+    "title": "My Book",
     "author": "mine",
     "url":"myurl",
     "likes":"50000"
