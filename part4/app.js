@@ -35,4 +35,14 @@ app.post("/api/blogs", (request, response) => {
   });
 });
 
+app.delete("/api/blogs/:id", async (request, response) => {
+  const id = request.params.id;
+
+  try {
+    await Blog.findByIdAndRemove(id);
+    response.status(204).end();
+  } catch (error) {
+    response.status(400).json({ error: "Invalid blog id" });
+  }
+});
 module.exports = app;
