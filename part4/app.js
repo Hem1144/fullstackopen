@@ -18,6 +18,12 @@ app.get("/api/blogs", (request, response) => {
 });
 
 app.post("/api/blogs", (request, response) => {
+  const blogData = request.body;
+
+  if (!blogData.title || !blogData.url) {
+    return response.status(400).json({ error: "Title and URL are required" });
+  }
+
   const blog = new Blog(request.body);
 
   if (!blog.likes) {

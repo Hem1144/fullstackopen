@@ -86,6 +86,29 @@ test('missing "likes" property defaults to 0', async () => {
   expect(response.body.likes).toBe(0);
 });
 
-afterAll(async () => {
-  await mongoose.connection.close();
+describe("Creating new blogs", () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({});
+  });
+
+  test("missing 'title' or 'url' properties result in 400 Bad Request", async () => {
+    const blogWithoutTitle = {
+      author: "No author",
+      url: "noTitleUrl",
+      likes: 3,
+    };
+
+    const blogWithoutUrl = {
+      title: "No url",
+      author: "No author",
+      likes: 2,
+    };
+
+    await api.post("/api/blogs").send(blogWithoutTitle).expect(400);
+    await api.post("/api/blogs").send(blogWithoutUrl).expect(400);
+  });
+
+  afterAll(async () => {
+    await mongoose.connection.close();
+  });
 });
