@@ -35,6 +35,20 @@ app.post("/api/blogs", (request, response) => {
   });
 });
 
+app.put("/api/blogs/:id", async (request, response) => {
+  const id = request.params.id;
+  const updatedBlogData = request.body;
+
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(id, updatedBlogData, {
+      new: true,
+    });
+    response.json(updatedBlog);
+  } catch (error) {
+    response.status(400).send({ error: "Invalid blog id" });
+  }
+});
+
 app.delete("/api/blogs/:id", async (request, response) => {
   const id = request.params.id;
 
@@ -45,4 +59,5 @@ app.delete("/api/blogs/:id", async (request, response) => {
     response.status(400).json({ error: "Invalid blog id" });
   }
 });
+
 module.exports = app;

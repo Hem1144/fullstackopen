@@ -14,4 +14,16 @@ content-type: application/json
 
 ###
 
-DELETE http://localhost:3003/api/blogs/64e863614cb79507e9d02816
+PUT http://localhost:3003/api/blogs/64e8655b27fd6f847bf2f934
+content-type: application/json
+
+{
+    "title": "My Book",
+    "author": "yourBook",
+    "url":"myurl",
+    "likes":"50000"
+}
+
+###
+
+DELETE http://localhost:3003/api/blogs/64e8655b27fd6f847bf2f934
