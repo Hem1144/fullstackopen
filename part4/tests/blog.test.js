@@ -47,6 +47,15 @@ test("the first note is about HTTP methods", async () => {
   expect(response.body[0].title).toBe("HTML is easy");
 });
 
+test("blogs have property 'id' instead of '_id'", async () => {
+  const response = await api.get("/api/blogs");
+
+  response.body.forEach((blog) => {
+    expect(blog.id).toBeDefined();
+    expect(blog._id).toBeUndefined();
+  });
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });
