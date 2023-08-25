@@ -3,22 +3,26 @@ const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/blog");
 
-const initialNotes = [
+const initialBlogs = [
   {
-    content: "HTML is easy",
-    important: false,
+    title: "HTML is easy",
+    author: "John Doe",
+    url: "myLink",
+    likes: 5,
   },
   {
-    content: "Browser can execute only JavaScript",
-    important: true,
+    title: "Browser can execute only JavaScript",
+    author: "Jane Smith",
+    url: "thisLink",
+    likes: 10,
   },
 ];
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  let noteObject = new Blog(initialNotes[0]);
+  let noteObject = new Blog(initialBlogs[0]);
   await noteObject.save();
-  noteObject = new Blog(initialNotes[1]);
+  noteObject = new Blog(initialBlogs[1]);
   await noteObject.save();
 });
 
@@ -45,4 +49,4 @@ test("the first note is about HTTP methods", async () => {
 
 afterAll(async () => {
   await mongoose.connection.close();
-}, 10000);
+});
