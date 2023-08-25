@@ -4,7 +4,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
 const { url } = require("./utils/config");
-const Blog = require("./models/blog"); 
+const Blog = require("./models/blog");
 
 mongoose.connect(url);
 
@@ -19,6 +19,10 @@ app.get("/api/blogs", (request, response) => {
 
 app.post("/api/blogs", (request, response) => {
   const blog = new Blog(request.body);
+
+  if (!blog.likes) {
+    blog.likes = 0;
+  }
 
   blog.save().then((result) => {
     response.status(201).json(result);
