@@ -6,12 +6,21 @@ POST http://localhost:3003/api/blogs/
 content-type: application/json
 
 {
-    "title": "My Book",
-    "author": "mine",
+    "title": "my story",
+    "author": "bharat",
     "url":"myurl",
     "likes":"50000"
 }
 
+###
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "Hem",
+  "name": "Hemlal Dulal",
+  "password": "pass"
+}
 ###
 
 PUT http://localhost:3003/api/blogs/64e8655b27fd6f847bf2f934

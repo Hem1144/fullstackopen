@@ -15,6 +15,12 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    if (error.errors.username && error.errors.username.kind === "unique") {
+      return response.status(400).json({ error: "Username must be unique" });
+    } else {
+      return response.status(400).json({ error: error.message });
+    }
   }
 
   next(error);
