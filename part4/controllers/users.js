@@ -6,14 +6,26 @@ app.post("/", async (request, response, next) => {
   try {
     const body = request.body;
 
-    if (!body.password || body.password.length < 3) {
+    if (!body.username || !body.password) {
       return response
         .status(400)
-        .json({ error: "Password must be at least 3 characters long" });
+        .json({ error: "Username and password are required" });
+    }
+
+    if (body.username.length < 3 || body.password.length < 3) {
+      return response.status(400).json({
+        error: "Username and password must be at least 3 characters long",
+      });
     }
 
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(body.password, saltRounds);
+
+    const existingUser = await User.findOne({ username: body.username });
+
+    if (existingUser) {
+      return response.status(400).json({ error: "Username must be unique" });
+    }
 
     const user = new User({
       username: body.username,
@@ -22,7 +34,7 @@ app.post("/", async (request, response, next) => {
     });
 
     const savedUser = await user.save();
-    response.json(savedUser);
+    response.status(201).json(savedUser);
   } catch (error) {
     next(error);
   }
