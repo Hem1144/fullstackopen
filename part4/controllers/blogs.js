@@ -1,14 +1,13 @@
-const blogsRouter = require("express").Router();
+const app = require("express").Router();
 const Blog = require("../models/blog");
-const jwt = require("jsonwebtoken");
 
-blogsRouter.get("/", (request, response) => {
+app.get("/", (request, response) => {
   Blog.find({}).then((blogs) => {
     response.json(blogs);
   });
 });
 
-blogsRouter.get("/:id", async (request, response) => {
+app.get("/:id", async (request, response) => {
   const id = request.params.id;
 
   try {
@@ -23,7 +22,7 @@ blogsRouter.get("/:id", async (request, response) => {
   }
 });
 
-blogsRouter.post("/", async (request, response, next) => {
+app.post("/", async (request, response, next) => {
   try {
     const blogData = request.body;
 
@@ -40,10 +39,10 @@ blogsRouter.post("/", async (request, response, next) => {
     const savedBlog = await blog.save();
     response.status(201).json(savedBlog);
   } catch (error) {
-    next(error);
+    next(new Error(error));
   }
 });
-blogsRouter.put("/:id", async (request, response) => {
+app.put("/:id", async (request, response) => {
   const id = request.params.id;
   const updatedBlogData = request.body;
 
@@ -57,7 +56,7 @@ blogsRouter.put("/:id", async (request, response) => {
   }
 });
 
-blogsRouter.delete("/:id", async (request, response) => {
+app.delete("/:id", async (request, response) => {
   const id = request.params.id;
 
   try {
@@ -69,4 +68,4 @@ blogsRouter.delete("/:id", async (request, response) => {
   }
 });
 
-module.exports = blogsRouter;
+module.exports = app;
