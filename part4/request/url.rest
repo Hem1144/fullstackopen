@@ -1,4 +1,4 @@
-GET http://localhost:3003/api/blogs
+GET http://localhost:3003/api/users
 
 ###
 
@@ -6,10 +6,10 @@ POST http://localhost:3003/api/blogs/
 content-type: application/json
 
 {
-    "title": "my story",
+    "title": "this story",
     "author": "bharat",
     "url":"myurl",
-    "likes":"50000"
+    "users":"64edaa773524597bf0862e6c"
 }
 
 ###
@@ -17,7 +17,7 @@ POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-  "username": "Hemlal",
+  "username": "Dulal2",
   "name": "Hemlal Dulal",
   "password": "pass"
 }

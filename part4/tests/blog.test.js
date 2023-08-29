@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 const initialBlogs = [
   {
@@ -53,37 +54,61 @@ test("blogs have property 'id' instead of '_id'", async () => {
   });
 });
 
-test("a new blog can be added", async () => {
-  const newBlog = {
-    title: "My Title",
-    author: "My Author",
-    url: "myUrl",
-    likes: 8,
-  };
+describe("Testing of Blogs", () => {
+  // beforeEach(async () => {
+  //   await User.deleteMany({});
+  //   const newUser = {
+  //     username: "akash",
+  //     name: "name",
+  //     password: "password",
+  //   };
 
-  await api
-    .post("/api/blogs")
-    .send(newBlog)
-    .expect(201)
-    .expect("Content-Type", /application\/json/);
+  // const response = await api.post("/api/users").send(newUser);
 
-  const response = await api.get("/api/blogs");
-  expect(response.body).toHaveLength(initialBlogs.length + 1);
+  //   console.log(response.body, "New user info");
+  // }, 10000);
 
-  const titles = response.body.map((blog) => blog.title);
-  expect(titles).toContain(newBlog.title);
-});
+  test("a new blog can be added", async () => {
+    const newUser = {
+      username: "akash",
+      name: "name",
+      password: "password",
+    };
 
-test('missing "likes" property defaults to 0', async () => {
-  const newBlog = {
-    title: "No Likes Blog",
-    author: "No Likes Author",
-    url: "noLikesLink",
-  };
+    const response1 = await api.post("/api/users").send(newUser);
 
-  const response = await api.post("/api/blogs").send(newBlog);
+    const newBlog = {
+      title: "My Title",
+      author: "My Author",
+      url: "myUrl",
+      likes: 8,
+      users: "64edd43c10dd6bfa7ab27100",
+    };
 
-  expect(response.body.likes).toBe(0);
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const response = await api.get("/api/blogs");
+    expect(response.body).toHaveLength(initialBlogs.length + 1);
+
+    const titles = response.body.map((blog) => blog.title);
+    expect(titles).toContain(newBlog.title);
+  });
+  test('missing "likes" property defaults to 0', async () => {
+    const newBlog = {
+      title: "No Likes Blog",
+      author: "No Likes Author",
+      url: "noLikesLink",
+      users: "64edd43c10dd6bfa7ab27100",
+    };
+
+    const response = await api.post("/api/blogs").send(newBlog);
+
+    expect(response.body.likes).toBe(0);
+  });
 });
 
 describe("Creating new blogs", () => {
@@ -137,7 +162,6 @@ test("updating a blog post changes the number of likes", async () => {
 
   expect(updatedBlogFromResponse.likes).toBe(blogToUpdate.likes + 1);
 });
-
 
 afterAll(async () => {
   await mongoose.connection.close();

@@ -1,10 +1,13 @@
 const app = require("express").Router();
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
-app.get("/", (request, response) => {
-  Blog.find({}).then((blogs) => {
-    response.json(blogs);
+app.get("/", async (request, response) => {
+  const blogs = await Blog.find({}).populate("users", {
+    username: 1,
+    name: 1,
   });
+  response.json(blogs);
 });
 
 app.get("/:id", async (request, response) => {
@@ -30,13 +33,21 @@ app.post("/", async (request, response, next) => {
       return response.status(400).json({ error: "Title and URL are required" });
     }
 
-    const blog = new Blog(request.body);
+    const user = await User.findById(request.body.users);
+
+    const blog = new Blog({
+      ...request.body,
+      users: user._id,
+    });
 
     if (!blog.likes) {
       blog.likes = 0;
     }
 
     const savedBlog = await blog.save();
+    user.blogs = user.blogs.concat(savedBlog._id);
+    await user.save();
+
     response.status(201).json(savedBlog);
   } catch (error) {
     next(new Error(error));
