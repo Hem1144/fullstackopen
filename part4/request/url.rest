@@ -4,23 +4,34 @@ GET http://localhost:3003/api/users
 
 POST http://localhost:3003/api/blogs/
 content-type: application/json
+authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR1bGFsIiwiaWQiOiI2NGVlMTcyZjM4ODEzNWQwYjU1ZmY0NzMiLCJpYXQiOjE2OTM1NjIyNTAsImV4cCI6MTY5MzU2MjI4MH0.A2tNejYGLT7pCLMsV_im88ojFJUkd_aLAS4-EvEuVmo
 
 {
-    "title": "this story",
+    "title": "blog created using token",
     "author": "bharat",
     "url":"myurl",
-    "users":"64edaa773524597bf0862e6c"
+    "users":"64ee172f388135d0b55ff473"
 }
 
 ###
 POST http://localhost:3003/api/users
 Content-Type: application/json
 
+
 {
-  "username": "Dulal2",
+  "username": "dulal",
   "name": "Hemlal Dulal",
-  "password": "pass"
+  "password": "dulal123"
 }
+###
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "dulal",
+  "password": "dulal123"
+}
+
 ###
 
 PUT http://localhost:3003/api/blogs/64e8655b27fd6f847bf2f934

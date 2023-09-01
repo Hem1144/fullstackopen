@@ -3,9 +3,8 @@ const app = require("express").Router();
 const User = require("../models/user");
 
 app.post("/", async (request, response, next) => {
+  const body = request.body;
   try {
-    const body = request.body;
-
     if (!body.username || !body.password) {
       return response
         .status(400)

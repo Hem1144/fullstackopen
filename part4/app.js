@@ -3,10 +3,10 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
-
 const { url } = require("./utils/config");
 const userRouter = require("./controllers/users");
 const blogsRouter = require("./controllers/blogs");
+const loginRouter = require("./controllers/login");
 const {
   errorHandler,
   unknownEndpoint,
@@ -22,6 +22,7 @@ app.use(requestLogger);
 
 app.use("/api/users", userRouter);
 app.use("/api/blogs", blogsRouter);
+app.use("/api/login", loginRouter);
 
 app.use(unknownEndpoint);
 app.use(errorHandler);
