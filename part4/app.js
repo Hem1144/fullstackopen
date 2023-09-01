@@ -12,6 +12,7 @@ const {
   unknownEndpoint,
   requestLogger,
 } = require("./utils/middleware");
+const middleware = require("./utils/middleware");
 
 mongoose.connect(url);
 
@@ -19,6 +20,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use(requestLogger);
+
+app.use(middleware.tokenExtractor);
 
 app.use("/api/users", userRouter);
 app.use("/api/blogs", blogsRouter);

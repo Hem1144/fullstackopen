@@ -4,10 +4,10 @@ GET http://localhost:3003/api/users
 
 POST http://localhost:3003/api/blogs/
 content-type: application/json
-authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR1bGFsIiwiaWQiOiI2NGVlMTcyZjM4ODEzNWQwYjU1ZmY0NzMiLCJpYXQiOjE2OTM1NjIyNTAsImV4cCI6MTY5MzU2MjI4MH0.A2tNejYGLT7pCLMsV_im88ojFJUkd_aLAS4-EvEuVmo
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR1bGFsIiwiaWQiOiI2NGVlMTcyZjM4ODEzNWQwYjU1ZmY0NzMiLCJpYXQiOjE2OTM1NjcxMDEsImV4cCI6MTY5MzU2NzEzMX0.DWgCXo5YBqRD-TCt_jrbD1-bj4Rwxo80CyneScNN7uM
 
 {
-    "title": "blog created using token",
+    "title": "blog created using token1",
     "author": "bharat",
     "url":"myurl",
     "users":"64ee172f388135d0b55ff473"
