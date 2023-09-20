@@ -77,12 +77,38 @@ app.put("/:id", async (request, response) => {
 app.delete("/:id", async (request, response) => {
   const id = request.params.id;
 
+  //! Check if the request includes a valid token
+  const token = request.token;
+  if (!token) {
+    return response.status(401).json({ error: "Token missing or invalid" });
+  }
+
+  //! Verify the token and extract the user's id from it
+  const decodedToken = jwt.verify(token, process.env.SECRET);
+  console.log(decodedToken, "Decoded token ");
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: "Token missing or invalid" });
+  }
+
+  //! Find the blog to be deleted
+  const blog = await Blog.findById(id);
+  console.log(blog, "blog fetched");
+
+  //! Check if the blog exists
+  if (!blog) {
+    return response.status(404).json({ error: "Blog not found" });
+  }
+
+  //! Check if the user trying to delete the blog is the creator of the blog
+  if (blog.users.toString() !== decodedToken.id) {
+    return response.status(403).json({ error: "Permission denied" });
+  }
+
   try {
     await Blog.findByIdAndRemove(id);
     response.status(204).end();
   } catch (error) {
     response.status(400).json({ error: "Invalid blog id" });
-    return;
   }
 });
 
