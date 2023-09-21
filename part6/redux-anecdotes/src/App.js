@@ -1,19 +1,27 @@
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { createAnecdote } from "./reducers/anecdoteReducer";
+import { createAnecdote, voteForAnecdote } from "./reducers/anecdoteReducer";
+
+const generateId = () => Number((Math.random() * 1000000).toFixed(0));
 
 const App = () => {
   const anecdotes = useSelector((state) => state);
   const dispatch = useDispatch();
 
-  const vote = (id) => {
-    dispatch({ type: "VOTE", data: { id } });
-  };
-
   const addAnecdote = (event) => {
     event.preventDefault();
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
-    dispatch(createAnecdote(content));
+    const newAnecdote = {
+      content,
+      id: generateId(),
+      votes: 0,
+    };
+    dispatch(createAnecdote(newAnecdote));
+  };
+
+  const vote = (id) => {
+    dispatch(voteForAnecdote(id));
   };
 
   return (
@@ -28,7 +36,7 @@ const App = () => {
           </div>
         </div>
       ))}
-      <h2>create new</h2>
+      <h2>Create New Anecdote</h2>
       <form onSubmit={addAnecdote}>
         <div>
           <input name="anecdote" />
