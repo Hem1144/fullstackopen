@@ -2,6 +2,7 @@ const app = require("express").Router();
 const Blog = require("../models/blog");
 const User = require("../models/user");
 const jwt = require("jsonwebtoken");
+const middleware = require("../utils/middleware");
 
 app.get("/", async (request, response) => {
   const blogs = await Blog.find({}).populate("users", {
@@ -34,7 +35,8 @@ app.post("/", async (request, response, next) => {
     if (!decodedToken.id) {
       return response.status(401).json({ error: "token invalid" });
     }
-    const user = await User.findById(decodedToken.id);
+    // const user = await User.findById(decodedToken.id);
+    const user = request.user;
 
     if (!blogData.title || !blogData.url) {
       return response.status(401).json({ error: "Title and URL are required" });

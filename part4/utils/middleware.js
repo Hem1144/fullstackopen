@@ -1,3 +1,5 @@
+const { User } = "../models/user";
+const jwt = require("jsonwebtoken");
 const logger = require("../utils/logger");
 
 const requestLogger = (request, response, next) => {
@@ -24,7 +26,6 @@ const errorHandler = (error, request, response, next) => {
       error: "token expired",
     });
   }
-
   next(error);
 };
 
@@ -38,9 +39,31 @@ const tokenExtractor = (request, response, next) => {
   next();
 };
 
+const userExtractor = async (request, response, next) => {
+  const token = request.token;
+
+  if (token) {
+    try {
+      const decodedToken = jwt.verify(token, process.env.SECRET);
+
+      if (decodedToken && decodedToken.id) {
+        const user = await User.findById(decodedToken.id);
+        if (user) {
+          request.user = user;
+        }
+      }
+    } catch (error) {
+      return response.status(401).json({ error: "Token missing or invalid" });
+    }
+  }
+
+  next();
+};
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
   tokenExtractor,
+  userExtractor,
 };

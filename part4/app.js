@@ -11,6 +11,7 @@ const {
   errorHandler,
   unknownEndpoint,
   requestLogger,
+  userExtractor,
 } = require("./utils/middleware");
 const middleware = require("./utils/middleware");
 
@@ -22,6 +23,8 @@ app.use(express.json());
 app.use(requestLogger);
 
 app.use(middleware.tokenExtractor);
+
+app.use("/api/blogs", userExtractor, blogsRouter);
 
 app.use("/api/users", userRouter);
 app.use("/api/blogs", blogsRouter);
