@@ -38,5 +38,15 @@ const reducer = (state = initialState, action) => {
   }
 };
 
+export const createAnecdote = (content) => {
+  return {
+    type: 'NEW_ANECDOTE',
+    data: {
+      content,
+      id: getId(),
+      votes: 0,
+    },
+  };
+};
 
 export default reducer
