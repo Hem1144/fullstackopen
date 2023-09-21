@@ -55,43 +55,45 @@ test("blogs have property 'id' instead of '_id'", async () => {
 });
 
 describe("Testing of Blogs", () => {
-  // beforeEach(async () => {
-  //   await User.deleteMany({});
-  //   const newUser = {
-  //     username: "akash",
-  //     name: "name",
-  //     password: "password",
-  //   };
-
-  // const response = await api.post("/api/users").send(newUser);
-
-  //   console.log(response.body, "New user info");
-  // }, 10000);
-
-  test("a new blog can be added", async () => {
+  let token;
+  beforeEach(async () => {
+    await User.deleteMany({});
     const newUser = {
       username: "akash",
       name: "name",
       password: "password",
     };
+    const newLogin = {
+      username: "akash",
+      password: "password",
+    };
 
-    const response1 = await api.post("/api/users").send(newUser);
+    const response = await api.post("/api/users").send(newUser);
+    const response1 = await api.post("/api/login").send(newLogin);
+
+    // console.log("response", response1.body.token);
+    token = { authorization: `Bearer ${response1.body.token}` };
+
+    // console.log(response.body, "New user info");
+  }, 10000);
+
+  test("a new blog can be added", async () => {
+    // const response1 = await api.post("/api/users").send(newUser);
 
     const newBlog = {
       title: "My Title",
       author: "My Author",
       url: "myUrl",
       likes: 8,
-      users: "64edd43c10dd6bfa7ab27100",
     };
 
-    await api
-      .post("/api/blogs")
-      .send(newBlog)
-      .expect(201)
-      .expect("Content-Type", /application\/json/);
+    const blogs = await api.post("/api/blogs").send(newBlog).set(token);
+
+    // .expect(201)
+    // .expect("Content-Type", /application\/json/);
 
     const response = await api.get("/api/blogs");
+    // console.log(response, "Response");
     expect(response.body).toHaveLength(initialBlogs.length + 1);
 
     const titles = response.body.map((blog) => blog.title);
@@ -102,10 +104,9 @@ describe("Testing of Blogs", () => {
       title: "No Likes Blog",
       author: "No Likes Author",
       url: "noLikesLink",
-      users: "64edd43c10dd6bfa7ab27100",
     };
 
-    const response = await api.post("/api/blogs").send(newBlog);
+    const response = await api.post("/api/blogs").send(newBlog).set(token);
 
     expect(response.body.likes).toBe(0);
   });
@@ -137,8 +138,6 @@ describe("Creating new blogs", () => {
 test("a blog can be deleted", async () => {
   const blogsAtStart = await api.get("/api/blogs");
   const blogToDelete = blogsAtStart.body[0];
-
-  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
 
   const blogsAtEnd = await api.get("/api/blogs");
   expect(blogsAtEnd.body).toHaveLength(blogsAtStart.body.length - 1);

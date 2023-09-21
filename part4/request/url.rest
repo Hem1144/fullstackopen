@@ -8,7 +8,7 @@ GET http://localhost:3003/api/blogs
 
 POST http://localhost:3003/api/blogs/
 content-type: application/json
-authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR1bGFsIiwiaWQiOiI2NGVlMTcyZjM4ODEzNWQwYjU1ZmY0NzMiLCJpYXQiOjE2OTUyMDUxMTUsImV4cCI6MTY5NTIwODcxNX0.TRnl0GTKxick-U0EBBO6_BMawrXjNwQWUbqgprlNQMU
+authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImR1bGFsIiwiaWQiOiI2NGVlMTcyZjM4ODEzNWQwYjU1ZmY0NzMiLCJpYXQiOjE2OTUyOTYxMTgsImV4cCI6MTY5NTI5OTcxOH0.aQaESrU1PO9ovO-Zrpb3OEQhvK-rjB0onWxBPc31mJc
 
 {
     "title": "pratikshya2 blog",
