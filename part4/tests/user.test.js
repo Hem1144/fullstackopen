@@ -65,51 +65,6 @@ describe("User creation", () => {
   });
 });
 
-describe("Blog creation with authentication", () => {
-  let token = "";
-
-  beforeEach(async () => {
-    // Log in as the existing user and get the token
-    const loginResponse = await api
-      .post("/api/login")
-      .send({ username: "root", password: "sekret" });
-
-    token = loginResponse.body.token;
-  });
-
-  test("a valid blog can be created with authentication", async () => {
-    const newBlog = {
-      title: "Test Blog",
-      author: "Test Author",
-      url: "http://testurl.com",
-      likes: 5,
-    };
-
-    await api
-      .post("/api/blogs")
-      .set("Authorization", `Bearer ${token}`)
-      .send(newBlog)
-      .expect(201)
-      .expect("Content-Type", /application\/json/);
-
-    const blogs = await api.get("/api/blogs");
-
-    expect(blogs.body).toHaveLength(1);
-    expect(blogs.body[0].title).toBe(newBlog.title);
-  });
-
-  test("adding a blog without authentication fails with 401 Unauthorized", async () => {
-    const newBlog = {
-      title: "Test Blog",
-      author: "Test Author",
-      url: "http://testurl.com",
-      likes: 5,
-    };
-
-    await api.post("/api/blogs").send(newBlog).expect(401);
-  });
-});
-
 afterAll(async () => {
   await mongoose.connection.close();
 });

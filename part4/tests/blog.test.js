@@ -99,6 +99,30 @@ describe("Testing of Blogs", () => {
     const titles = response.body.map((blog) => blog.title);
     expect(titles).toContain(newBlog.title);
   });
+
+  test("a blog can be deleted", async () => {
+    const newBlog = {
+      title: "My Title",
+      author: "My Author",
+      url: "myUrl",
+      likes: 8,
+    };
+
+    const blogs = await api.post("/api/blogs").send(newBlog).set(token);
+
+    const blogsAtStart = await api.get("/api/blogs");
+
+    const blogToDelete = blogsAtStart.body[2];
+
+    const del = await api.delete(`/api/blogs/${blogToDelete.id}`).set(token);
+
+    const blogsAtEnd = await api.get("/api/blogs");
+    expect(blogsAtEnd.body).toHaveLength(blogsAtStart.body.length - 1);
+
+    const titles = blogsAtEnd.body.map((blog) => blog.title);
+    expect(titles).not.toContain(blogToDelete.title);
+  });
+
   test('missing "likes" property defaults to 0', async () => {
     const newBlog = {
       title: "No Likes Blog",
@@ -113,8 +137,23 @@ describe("Testing of Blogs", () => {
 });
 
 describe("Creating new blogs", () => {
+  let token;
   beforeEach(async () => {
-    await Blog.deleteMany({});
+    await User.deleteMany({});
+    const newUser = {
+      username: "akash",
+      name: "name",
+      password: "password",
+    };
+    const newLogin = {
+      username: "akash",
+      password: "password",
+    };
+
+    const response = await api.post("/api/users").send(newUser);
+    const response1 = await api.post("/api/login").send(newLogin);
+
+    token = { authorization: `Bearer ${response1.body.token}` };
   });
 
   test("missing 'title' or 'url' properties result in 400 Bad Request", async () => {
@@ -130,20 +169,9 @@ describe("Creating new blogs", () => {
       likes: 2,
     };
 
-    await api.post("/api/blogs").send(blogWithoutTitle).expect(400);
-    await api.post("/api/blogs").send(blogWithoutUrl).expect(400);
+    await api.post("/api/blogs").send(blogWithoutTitle).set(token).expect(400);
+    await api.post("/api/blogs").send(blogWithoutUrl).set(token).expect(400);
   });
-});
-
-test("a blog can be deleted", async () => {
-  const blogsAtStart = await api.get("/api/blogs");
-  const blogToDelete = blogsAtStart.body[0];
-
-  const blogsAtEnd = await api.get("/api/blogs");
-  expect(blogsAtEnd.body).toHaveLength(blogsAtStart.body.length - 1);
-
-  const titles = blogsAtEnd.body.map((blog) => blog.title);
-  expect(titles).not.toContain(blogToDelete.title);
 });
 
 test("updating a blog post changes the number of likes", async () => {
@@ -160,6 +188,63 @@ test("updating a blog post changes the number of likes", async () => {
   );
 
   expect(updatedBlogFromResponse.likes).toBe(blogToUpdate.likes + 1);
+});
+
+describe("Blog creation with authentication", () => {
+  let token = "";
+
+  beforeEach(async () => {
+    await Blog.deleteMany({});
+    const newUser = {
+      username: "akash",
+      name: "name",
+      password: "password",
+    };
+    const newLogin = {
+      username: "akash",
+      password: "password",
+    };
+
+    const response = await api.post("/api/users").send(newUser);
+    const response1 = await api.post("/api/login").send(newLogin);
+
+    //! Log in as the existing user and get the token
+
+    token = response1.body.token;
+  });
+
+  test("a valid blog can be created with authentication", async () => {
+    const newBlog = {
+      title: "Test Blog",
+      author: "Test Author",
+      url: "http://testurl.com",
+      likes: 5,
+    };
+
+    await api
+      .post("/api/blogs")
+      .set({ authorization: `Bearer ${token}` })
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    const blogs = await api.get("/api/blogs");
+    console.log(blogs, "blogs");
+
+    expect(blogs.body).toHaveLength(1);
+    expect(blogs.body[0].title).toBe(newBlog.title);
+  });
+
+  test("adding a blog without authentication fails with 401 Unauthorized", async () => {
+    const newBlog = {
+      title: "Test Blog",
+      author: "Test Author",
+      url: "http://testurl.com",
+      likes: 5,
+    };
+
+    await api.post("/api/blogs").send(newBlog).expect(401);
+  });
 });
 
 afterAll(async () => {

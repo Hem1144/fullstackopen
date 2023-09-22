@@ -39,7 +39,7 @@ app.post("/", async (request, response, next) => {
     const user = request.user;
 
     if (!blogData.title || !blogData.url) {
-      return response.status(401).json({ error: "Title and URL are required" });
+      return response.status(400).json({ error: "Title and URL are required" });
     }
 
     // const user = await User.findById(request.body.users);
@@ -87,14 +87,12 @@ app.delete("/:id", async (request, response) => {
 
   //! Verify the token and extract the user's id from it
   const decodedToken = jwt.verify(token, process.env.SECRET);
-  console.log(decodedToken, "Decoded token ");
   if (!decodedToken.id) {
     return response.status(401).json({ error: "Token missing or invalid" });
   }
 
   //! Find the blog to be deleted
   const blog = await Blog.findById(id);
-  console.log(blog, "blog fetched");
 
   //! Check if the blog exists
   if (!blog) {
