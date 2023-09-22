@@ -52,9 +52,16 @@ export const createAnecdote = (content) => {
     type: "NEW_ANECDOTE",
     data: {
       content,
-      id: getId(),
+      id: new Date().getTime(),
       votes: 0,
     },
+  };
+};
+
+export const initializeAnecdotes = (anecdotes) => {
+  return {
+    type: "INIT_ANECDOTES",
+    data: anecdotes,
   };
 };
 

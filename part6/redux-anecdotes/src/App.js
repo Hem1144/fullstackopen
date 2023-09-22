@@ -20,22 +20,21 @@ const App = () => {
   return (
     <div>
       <h2>Anecdotes</h2>
-      <h2>Vote for Anecdotes</h2>
       {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes} vote{anecdote.votes !== 1 ? "s" : ""}
-            <button onClick={() => vote(anecdote.id)}>Vote</button>
+            <button onClick={() => vote(anecdote.id)}>vote</button>
           </div>
         </div>
       ))}
-      <br />
+      <h2>Create New Anecdote</h2>
       <form onSubmit={addAnecdote}>
         <div>
           <input name="anecdote" />
         </div>
-        <button type="submit">Create</button>
+        <button type="submit">create</button>
       </form>
     </div>
   );
