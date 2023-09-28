@@ -1,9 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { createAnecdote } from "../reducers/anecdoteReducer";
-import anecdoteService from "../services/anecdotes";
-
-const getId = () => (100000 * Math.random()).toFixed(0);
+import { createAnecdoteAsync } from "../reducers/anecdoteReducer";
 
 const AnecdoteForm = () => {
   const dispatch = useDispatch();
@@ -13,18 +10,7 @@ const AnecdoteForm = () => {
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
 
-    const newAnecdote = {
-      content,
-      id: getId(),
-      votes: 0,
-    };
-
-    try {
-      const createdAnecdote = await anecdoteService.createAnecdote(newAnecdote);
-      dispatch(createAnecdote(createdAnecdote));
-    } catch (error) {
-      console.error("An error occurred while creating the anecdote:", error);
-    }
+    dispatch(createAnecdoteAsync(content));
   };
 
   return (
