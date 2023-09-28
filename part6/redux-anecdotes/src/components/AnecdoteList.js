@@ -21,7 +21,7 @@ const AnecdoteList = () => {
   const dispatch = useDispatch();
 
   const vote = (id, content) => {
-    dispatch(voteForAnecdote(id));
+    dispatch(voteForAnecdote({ id }));
     dispatch(setNotification(`you voted "${content}"`));
     setTimeout(() => {
       dispatch(clearNotification());
@@ -32,10 +32,11 @@ const AnecdoteList = () => {
     <div>
       <Filter />
       {anecdotes.map((anecdote) => (
-        <div key={anecdote.id}>
+        <div key={anecdote.id || Math.random()}>
           <div>{anecdote.content}</div>
           <div>
-            has {anecdote.votes} vote{anecdote.votes !== 1 ? "s" : ""}
+            has {anecdote.votes} vote
+            {anecdote.votes !== 1 ? "s" : ""}
             <button onClick={() => vote(anecdote.id, anecdote.content)}>
               vote
             </button>
