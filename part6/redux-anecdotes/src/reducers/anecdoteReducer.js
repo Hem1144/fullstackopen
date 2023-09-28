@@ -43,4 +43,20 @@ export const createAnecdoteAsync = (content) => {
   };
 };
 
+export const voteForAnecdoteAsync = (anecdote) => {
+  return async (dispatch) => {
+    const updatedAnecdote = {
+      ...anecdote,
+      votes: anecdote.votes + 1,
+    };
+
+    try {
+      await anecdoteService.updateAnecdote(anecdote.id, updatedAnecdote);
+      dispatch(voteForAnecdote({ id: anecdote.id }));
+    } catch (error) {
+      console.error("An error occurred while updating the anecdote:", error);
+    }
+  };
+};
+
 export default reducer.reducer;
