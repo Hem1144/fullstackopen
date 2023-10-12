@@ -33,18 +33,13 @@ const App = () => {
   const authorField = useField("text");
   const infoField = useField("text");
 
-  const addNew = (event) => {
-    event.preventDefault();
-    const anecdote = {
-      content: contentField.value,
-      author: authorField.value,
-      info: infoField.value,
-      votes: 0,
-      id: Math.round(Math.random() * 10000),
-    };
-    setAnecdotes(anecdotes.concat(anecdote));
+  const addNew = (obj) => {
+    console.log(obj, "Somethis happen");
+
+    setAnecdotes(anecdotes.concat(obj));
+    // console.log(anecdote, "Somethis happen");
     navigate("/");
-    setNotification(`A new anecdote ${anecdote.content} created!`);
+    setNotification(`A new anecdote ${obj.content} created!`);
     setTimeout(() => {
       setNotification(null);
     }, 3000);
