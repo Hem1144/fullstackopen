@@ -1,12 +1,13 @@
 import { useState } from "react";
 import Menu from "./components/Menu";
 import AnecdoteList from "./components/AnecdoteList";
-import CreateNew from "./components/CreateNote";
 import About from "./components/About";
 import Footer from "./components/Footer";
 import Anecdote from "./components/Anecdote";
 import Notification from "./components/Notification";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import { useField } from "./hooks/index";
+import CreateNew from "./CreateNew";
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -26,17 +27,31 @@ const App = () => {
     },
   ]);
   const navigate = useNavigate();
-
   const [notification, setNotification] = useState("");
 
-  const addNew = (anecdote) => {
-    anecdote.id = Math.round(Math.random() * 10000);
+  const contentField = useField("text");
+  const authorField = useField("text");
+  const infoField = useField("text");
+
+  const addNew = (event) => {
+    event.preventDefault();
+    const anecdote = {
+      content: contentField.value,
+      author: authorField.value,
+      info: infoField.value,
+      votes: 0,
+      id: Math.round(Math.random() * 10000),
+    };
     setAnecdotes(anecdotes.concat(anecdote));
     navigate("/");
-    setNotification(`a new anecdote ${anecdote.content} created!`);
+    setNotification(`A new anecdote ${anecdote.content} created!`);
     setTimeout(() => {
       setNotification(null);
     }, 3000);
+
+    contentField.reset();
+    authorField.reset();
+    infoField.reset();
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
