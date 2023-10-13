@@ -7,7 +7,7 @@ import Anecdote from "./components/Anecdote";
 import Notification from "./components/Notification";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { useField } from "./hooks/index";
-import CreateNew from "./CreateNew";
+import CreateNew from "./components/CreateNew";
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -34,10 +34,7 @@ const App = () => {
   const infoField = useField("text");
 
   const addNew = (obj) => {
-    console.log(obj, "Somethis happen");
-
     setAnecdotes(anecdotes.concat(obj));
-    // console.log(anecdote, "Somethis happen");
     navigate("/");
     setNotification(`A new anecdote ${obj.content} created!`);
     setTimeout(() => {
