@@ -8,7 +8,7 @@
 //   useEffect(() => {
 //     blogService.getAll().then(blogs =>
 //       setBlogs( blogs )
-//     )  
+//     )
 //   }, [])
 
 //   return (
@@ -23,28 +23,22 @@
 
 // export default App
 
-import React, { useState } from 'react';
-import LoginForm from './components/LoginForm'; // Import the LoginForm component
+import React, { useState } from "react";
+import LoginForm from "./components/LoginForm";
 
 const App = () => {
   const [user, setUser] = useState(null);
 
-  // Define a function to handle user login
-  const handleLogin = async (username, password) => {
-    // Implement your login logic here, e.g., make an API request to authenticate the user
-    // If login is successful, set the user state
-    // If login fails, display an error message
-  };
+  const handleLogin = async (username, password) => {};
 
   return (
     <div>
       <h1>Blog List</h1>
       {user === null ? (
-        <LoginForm handleLogin={handleLogin} /> // Render the login form if user is not logged in
+        <LoginForm handleLogin={handleLogin} />
       ) : (
         <div>
           <h2>Welcome, {user.name}</h2>
-          {/* Render the list of blogs here */}
         </div>
       )}
     </div>
