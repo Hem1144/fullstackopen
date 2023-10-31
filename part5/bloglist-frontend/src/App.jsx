@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import userService from "./services/users";
+import userService from "./services/user";
 import "./main.css";
 
 const App = () => {
@@ -14,6 +14,7 @@ const App = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    console.log("1 useEffect - executed");
     async function fetchData() {
       const userBlogs = await userService.getUserBlogs(user);
       setBlogs(userBlogs.blogs);
@@ -40,7 +41,6 @@ const App = () => {
       });
 
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-
       blogService.setToken(user.token);
       setUser(user);
       setUsername("");
@@ -53,15 +53,26 @@ const App = () => {
     }
   };
 
+  const logOut = () => {
+    window.localStorage.removeItem("loggedBlogAppUser");
+    setUser(null);
+    setNewBlog({ title: "", author: "", url: "" });
+  };
+
   const addBlog = async (e) => {
     e.preventDefault();
     try {
+      console.log(newBlog, "new blog from state");
       const response = await blogService.create(newBlog);
+      setBlogs(blogs.concat(response));
+      console.log(response);
     } catch (error) {
-      setErrMessage(err.response.data.error);
-      if (err.response.data.error === "token expired") {
-        window.localStorage.removeItem("loggedBlogAppUser");
-        setUser(null);
+      setErrMessage(error.response.data.error);
+      setTimeout(() => {
+        setErrMessage(null);
+      }, 5000);
+      if (error.response.data.error === "token expired") {
+        logOut();
       }
     }
   };
@@ -141,7 +152,10 @@ const App = () => {
       {!user && loginForm()}
       {user && (
         <div>
-          <p>{user.name} logged in</p>
+          <p>
+            {user.name} logged in <button onClick={logOut}>Log out</button>
+          </p>
+
           {blogForm()}
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />
