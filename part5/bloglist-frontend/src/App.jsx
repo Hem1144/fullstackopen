@@ -1,5 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
+import Login from "./components/LoginForm";
+import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Toggable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import userService from "./services/user";
@@ -13,6 +16,9 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+
+  const blogFormRef = useRef();
+  const loginFormRef = useRef();
 
   useEffect(() => {
     async function fetchData() {
@@ -38,14 +44,14 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-
+    loginFormRef.current.toggleVisibility();
     try {
       const user = await loginService.login({
         username,
         password,
       });
 
-      let tokenExpirationTime = 1 * 60;
+      let tokenExpirationTime = 60 * 60;
       let tokenExpiry = Date.now() + tokenExpirationTime;
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       window.localStorage.setItem("tokenExpiry", tokenExpiry);
@@ -59,6 +65,8 @@ const App = () => {
       setPassword("");
     } catch (exception) {
       setErrMessage("Wrong credentials");
+      setUsername("");
+      setPassword("");
       setTimeout(() => {
         setErrMessage(null);
       }, 3000);
@@ -80,6 +88,7 @@ const App = () => {
 
   const addBlog = async (e) => {
     e.preventDefault();
+    blogFormRef.current.toggleVisibility();
     try {
       const response = await blogService.create(newBlog);
       setBlogs(blogs.concat(response));
@@ -112,7 +121,7 @@ const App = () => {
     if (message === null) {
       return null;
     }
-    return type === "errMessage" ? (
+    return type === "errMesage" ? (
       <div className="error">{message}</div>
     ) : (
       <div className="notify">{message}</div>
@@ -120,57 +129,25 @@ const App = () => {
   };
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
+    <Togglable buttonLabel="Show Login" ref={loginFormRef}>
+      <Login
+        handleLogin={handleLogin}
+        username={username}
+        setUsername={setUsername}
+        password={password}
+        setPassword={setPassword}
+      />
+    </Togglable>
   );
 
   const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <label htmlFor="title">Title: </label>
-      <input
-        value={newBlog.title}
-        name="title"
-        onChange={handleChange}
-        placeholder="title..."
+    <Togglable buttonLabel="Show Blog Form" ref={blogFormRef}>
+      <BlogForm
+        addBlog={addBlog}
+        newBlog={newBlog}
+        handleChange={handleChange}
       />
-      <br />
-      <label htmlFor="author">Author: </label>
-      <input
-        value={newBlog.author}
-        name="author"
-        onChange={handleChange}
-        placeholder="Author..."
-      />
-      <br />
-      <label htmlFor="url">URL: </label>
-      <input
-        value={newBlog.url}
-        name="url"
-        onChange={handleChange}
-        placeholder="url..."
-      />
-      <br />
-      <button type="submit">Create</button>
-    </form>
+    </Togglable>
   );
 
   return (
