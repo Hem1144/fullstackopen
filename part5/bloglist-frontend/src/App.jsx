@@ -9,12 +9,12 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
   const [errMessage, setErrMessage] = useState(null);
+  const [notifyMessage, setNotifyMessage] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    console.log("1 useEffect - executed");
     async function fetchData() {
       const userBlogs = await userService.getUserBlogs(user);
       setBlogs(userBlogs.blogs);
@@ -43,13 +43,17 @@ const App = () => {
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
+      setNotifyMessage(`${user.name} logged In`);
+      setTimeout(() => {
+        setNotifyMessage(null);
+      }, 1000);
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrMessage("Wrong credentials");
+      setErrMessage("wrong username or password");
       setTimeout(() => {
         setErrMessage(null);
-      }, 5000);
+      }, 3000);
     }
   };
 
@@ -57,6 +61,10 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogAppUser");
     setUser(null);
     setNewBlog({ title: "", author: "", url: "" });
+    setNotifyMessage("User logged out.");
+    setTimeout(() => {
+      setNotifyMessage(null);
+    }, 500);
   };
 
   const addBlog = async (e) => {
@@ -65,14 +73,20 @@ const App = () => {
       const response = await blogService.create(newBlog);
       setBlogs(blogs.concat(response));
       setNewBlog({ title: "", author: "", url: "" });
+      setNotifyMessage(
+        `A new blog ${response.title}! by ${response.author} added`
+      );
+      setTimeout(() => {
+        setNotifyMessage(null);
+      }, 2000);
     } catch (error) {
       setErrMessage(error.response.data.error);
       setTimeout(() => {
+        if (error.response.data.error === "token expired") {
+          logOut();
+        }
         setErrMessage(null);
-      }, 5000);
-      if (error.response.data.error === "token expired") {
-        logOut();
-      }
+      }, 500);
     }
   };
 
@@ -83,11 +97,15 @@ const App = () => {
     });
   };
 
-  const Notification = ({ message }) => {
+  const Notification = ({ type, message }) => {
     if (message === null) {
       return null;
     }
-    return <div className="error">{message}</div>;
+    return type === "errMessage" ? (
+      <div className="error">{message}</div>
+    ) : (
+      <div className="notify">{message}</div>
+    );
   };
 
   const loginForm = () => (
@@ -147,7 +165,10 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={errMessage} />
+      <Notification
+        type={notifyMessage ? "notifyMessage" : "errMessage"}
+        message={errMessage || notifyMessage}
+      />
       {!user && loginForm()}
       {user && (
         <div>
