@@ -10,7 +10,6 @@ import "./main.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
   const [errMessage, setErrMessage] = useState(null);
   const [notifyMessage, setNotifyMessage] = useState(null);
   const [username, setUsername] = useState("");
@@ -77,7 +76,6 @@ const App = () => {
     window.localStorage.removeItem("loggedBlogAppUser");
     window.localStorage.removeItem("tokenExpiry");
     setUser(null);
-    setNewBlog({ title: "", author: "", url: "" });
     reason === "token-expired"
       ? setNotifyMessage("Token Expired, logged out!!")
       : setNotifyMessage("User logged out.");
@@ -86,13 +84,11 @@ const App = () => {
     }, 500);
   };
 
-  const addBlog = async (e) => {
-    e.preventDefault();
+  const addBlog = async (newBlog) => {
     blogFormRef.current.toggleVisibility();
     try {
       const response = await blogService.create(newBlog);
       setBlogs(blogs.concat(response));
-      setNewBlog({ title: "", author: "", url: "" });
       setNotifyMessage(
         `A new blog ${response.title}! by ${response.author} added`
       );
@@ -108,13 +104,6 @@ const App = () => {
         setErrMessage(null);
       }, 500);
     }
-  };
-
-  const handleChange = (e) => {
-    setNewBlog({
-      ...newBlog,
-      [e.target.name]: e.target.value,
-    });
   };
 
   const Notification = ({ type, message }) => {
@@ -203,11 +192,7 @@ const App = () => {
 
   const blogForm = () => (
     <Togglable buttonLabel="Show Blog Form" ref={blogFormRef}>
-      <BlogForm
-        addBlog={addBlog}
-        newBlog={newBlog}
-        handleChange={handleChange}
-      />
+      <BlogForm createBlog={addBlog} />
     </Togglable>
   );
 
