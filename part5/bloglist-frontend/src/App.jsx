@@ -51,7 +51,7 @@ const App = () => {
         password,
       });
 
-      let tokenExpirationTime = 60 * 60;
+      let tokenExpirationTime = 1000 * 60;
       let tokenExpiry = Date.now() + tokenExpirationTime;
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       window.localStorage.setItem("tokenExpiry", tokenExpiry);
@@ -94,7 +94,7 @@ const App = () => {
       setBlogs(blogs.concat(response));
       setNewBlog({ title: "", author: "", url: "" });
       setNotifyMessage(
-        `A new blog, ${response.title}! by ${response.author} added`
+        `A new blog ${response.title}! by ${response.author} added`
       );
       setTimeout(() => {
         setNotifyMessage(null);
@@ -121,11 +121,27 @@ const App = () => {
     if (message === null) {
       return null;
     }
-    return type === "errMesage" ? (
+    return type === "errMessage" ? (
       <div className="error">{message}</div>
     ) : (
       <div className="notify">{message}</div>
     );
+  };
+
+  const updateLikes = async (blogToUpdate) => {
+    blogToUpdate = { ...blogToUpdate, likes: blogToUpdate.likes + 1 };
+    try {
+      const response = await blogService.update(blogToUpdate.id, blogToUpdate);
+      setBlogs(blogs.map((n) => (n.id !== response.id ? n : response)));
+    } catch (error) {
+      setErrMessage(error.response.data.error);
+      setTimeout(() => {
+        if (error.response.data.error === "token expired") {
+          logOut("token-expired");
+        }
+        setErrMessage(null);
+      }, 500);
+    }
   };
 
   const loginForm = () => (
@@ -166,7 +182,12 @@ const App = () => {
 
           {blogForm()}
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateLikes={() => updateLikes(blog)}
+              blogOwner={user.name}
+            />
           ))}
         </div>
       )}
