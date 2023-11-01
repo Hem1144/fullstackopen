@@ -41,3 +41,26 @@ test("Likes and Url will be shown when toggled", async () => {
   expect(screen.queryByText("Likes")).toBeDefined();
   expect(screen.queryByText("url")).toBeDefined();
 });
+
+test("Like button is clickable", async () => {
+  const blog = {
+    title: "A test-case",
+    author: "Jest Library",
+    url: "https://localhost:3000/",
+    likes: 99,
+  };
+  const mockHandler = jest.fn();
+
+  const container = render(
+    <Blog blog={blog} updateLikes={mockHandler} />
+  ).container;
+
+  const user = userEvent.setup();
+  const button = screen.getByText("show");
+  await user.click(button);
+  expect(screen.queryByText("Like")).toBeDefined();
+  const like_button = screen.getByText("Like");
+  await user.click(like_button);
+  await user.click(like_button);
+  expect(mockHandler.mock.calls).toHaveLength(2);
+});
