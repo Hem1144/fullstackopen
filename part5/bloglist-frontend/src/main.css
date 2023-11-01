@@ -10,15 +10,23 @@ h1 {
   border-style: solid;
   border-radius: 5px;
   padding: 10px;
-  margin-bottom: 10px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  z-index: 2;
 }
 
 .notify {
+  text-align: center;
+  width: auto;
   color: green;
   background: lightgrey;
   font-size: 20px;
   border-style: solid;
   border-radius: 5px;
   padding: 10px;
-  margin-bottom: 10px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  z-index: 1;
 }

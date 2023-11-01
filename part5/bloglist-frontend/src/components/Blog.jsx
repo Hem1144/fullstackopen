@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog, updateLikes, blogOwner }) => {
+const Blog = ({ blog, updateLikes, blogOwner, delBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -29,6 +29,16 @@ const Blog = ({ blog, updateLikes, blogOwner }) => {
           {blog.author}
           <br />
           {blogOwner}
+          <br />
+          <button
+            style={{
+              backgroundColor: "#1755a7",
+              color: "white",
+            }}
+            onClick={delBlog}
+          >
+            remove
+          </button>
         </p>
       </div>
     );
