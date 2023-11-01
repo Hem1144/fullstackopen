@@ -176,7 +176,7 @@ const App = () => {
             setNotifyMessage("unknown Error!!");
             setTimeout(() => {
               setNotifyMessage(null);
-            }, 1000);
+            }, 500);
             break;
           }
         }

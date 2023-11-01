@@ -30,15 +30,7 @@ const Blog = ({ blog, updateLikes, blogOwner, delBlog }) => {
           <br />
           {blogOwner}
           <br />
-          <button
-            style={{
-              backgroundColor: "#1755a7",
-              color: "white",
-            }}
-            onClick={delBlog}
-          >
-            remove
-          </button>
+          <button onClick={delBlog}>remove</button>
         </p>
       </div>
     );
