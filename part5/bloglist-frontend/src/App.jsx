@@ -64,7 +64,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrMessage("Wrong credentials");
+      setErrMessage("wrong username or password");
       setUsername("");
       setPassword("");
       setTimeout(() => {
@@ -94,7 +94,7 @@ const App = () => {
       setBlogs(blogs.concat(response));
       setNewBlog({ title: "", author: "", url: "" });
       setNotifyMessage(
-        `A new blog, "${response.title}" by ${response.author} added`
+        `A new blog, ${response.title}! by ${response.author} added`
       );
       setTimeout(() => {
         setNotifyMessage(null);
