@@ -51,7 +51,7 @@ const App = () => {
         password,
       });
 
-      let tokenExpirationTime = 60 * 60;
+      let tokenExpirationTime = 1000 * 60;
       let tokenExpiry = Date.now() + tokenExpirationTime;
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       window.localStorage.setItem("tokenExpiry", tokenExpiry);
@@ -106,7 +106,7 @@ const App = () => {
           logOut("token-expired");
         }
         setErrMessage(null);
-      }, 1000);
+      }, 500);
     }
   };
 
@@ -176,7 +176,7 @@ const App = () => {
             setNotifyMessage("unknown Error!!");
             setTimeout(() => {
               setNotifyMessage(null);
-            }, 500);
+            }, 1000);
             break;
           }
         }
