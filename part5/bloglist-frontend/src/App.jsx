@@ -62,10 +62,9 @@ const App = () => {
   const addBlog = async (e) => {
     e.preventDefault();
     try {
-      console.log(newBlog, "new blog from state");
       const response = await blogService.create(newBlog);
       setBlogs(blogs.concat(response));
-      console.log(response);
+      setNewBlog({ title: "", author: "", url: "" });
     } catch (error) {
       setErrMessage(error.response.data.error);
       setTimeout(() => {
