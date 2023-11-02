@@ -21,8 +21,8 @@ const App = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const userBlogs = await userService.getUserBlogs(user);
-      setBlogs(userBlogs.blogs);
+      const allBlogs = await blogService.getAll();
+      setBlogs(allBlogs);
     }
     user ? fetchData() : null;
   }, [user]);
@@ -30,6 +30,7 @@ const App = () => {
   useEffect(() => {
     const tokenExpiry = window.localStorage.getItem("tokenExpiry");
     if (tokenExpiry && new Date() > tokenExpiry) {
+      console.log("here");
       logOut("token-Expired");
     } else {
       const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
@@ -50,7 +51,7 @@ const App = () => {
         password,
       });
 
-      let tokenExpirationTime = 1000 * 60;
+      let tokenExpirationTime = 1000 * 60 * 5;
       let tokenExpiry = Date.now() + tokenExpirationTime;
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
       window.localStorage.setItem("tokenExpiry", tokenExpiry);
@@ -218,8 +219,8 @@ const App = () => {
                 key={blog.id}
                 blog={blog}
                 updateLikes={() => updateLikes(blog)}
-                blogOwner={user.name}
                 delBlog={() => delBlog(blog)}
+                loggedInUser={user}
               />
             ))}
         </div>
