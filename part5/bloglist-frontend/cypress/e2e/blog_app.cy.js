@@ -67,5 +67,18 @@ describe("Blog app", function () {
       cy.get("#like-blog").click();
       cy.contains("1");
     });
+
+    it("User can delete a blog", function () {
+      createBlog();
+      cy.contains("show").click();
+      cy.get("#remove-blog").click();
+      cy.contains(
+        ".notify",
+        'A blog, "Title added by cypress test" by Cypress In-built Tester is deleted!!!',
+        { matchCase: false }
+      );
+      cy.get(".notify").should("have.css", "color", "rgb(0, 128, 0)");
+      cy.get(".notify").should("have.css", "border-style", "solid");
+    });
   });
 });
