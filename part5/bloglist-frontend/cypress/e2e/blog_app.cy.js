@@ -1,10 +1,12 @@
 describe("Blog app", function () {
   beforeEach(function () {
-    cy.request("POST", "http://localhost:3003/api/testing/reset");
-    cy.visit("http://localhost:5173/");
+    cy.request("POST", `${Cypress.env("BACKEND")}/testing/reset`);
+    cy.visit("");
   });
 
   it("Login form is shown", function () {
-    cy.contains("Show Login");
+    cy.contains("Show Login").click();
+    cy.contains("username");
+    cy.contains("password");
   });
 });
