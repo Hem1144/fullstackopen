@@ -46,7 +46,7 @@ describe("Blog app", function () {
       cy.contains("login").click();
     });
 
-    it("A blog can be created", function () {
+    const createBlog = function () {
       cy.contains("Show Blog Form").click();
       cy.get("#title").type("Title added by cypress test");
       cy.get("#author").type("Cypress In-built Tester");
@@ -56,6 +56,16 @@ describe("Blog app", function () {
       cy.contains("Cypress In-built Tester");
       cy.get(".notify").should("have.css", "color", "rgb(0, 128, 0)");
       cy.get(".notify").should("have.css", "border-style", "solid");
+    };
+
+    it("A blog can be created", createBlog);
+
+    it("User can Like a blog", function () {
+      createBlog();
+      cy.contains("show").click();
+      cy.contains("0");
+      cy.get("#like-blog").click();
+      cy.contains("1");
     });
   });
 });
