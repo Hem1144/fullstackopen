@@ -23,6 +23,8 @@ describe("Blog app", function () {
       cy.get("#password").type("admin");
       cy.contains("login").click();
       cy.contains("Cypress Tester logged in");
+      cy.get(".notify").should("have.css", "color", "rgb(0, 128, 0)");
+      cy.get(".notify").should("have.css", "border-style", "solid");
     });
 
     it("fails with wrong credentials", function () {
