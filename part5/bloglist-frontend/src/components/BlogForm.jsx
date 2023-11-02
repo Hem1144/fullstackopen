@@ -44,7 +44,9 @@ const BlogForm = ({ createBlog }) => {
         placeholder="url..."
       />
       <br />
-      <button type="submit">Create</button>
+      <button type="submit" id="submit-btn">
+        Create
+      </button>
     </form>
   );
 };

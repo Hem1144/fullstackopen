@@ -37,4 +37,25 @@ describe("Blog app", function () {
       cy.get(".error").should("have.css", "border-style", "solid");
     });
   });
+
+  describe("When logged in", function () {
+    beforeEach(function () {
+      cy.contains("Show Login").click();
+      cy.get("#username").type("cypress");
+      cy.get("#password").type("admin");
+      cy.contains("login").click();
+    });
+
+    it("A blog can be created", function () {
+      cy.contains("Show Blog Form").click();
+      cy.get("#title").type("Title added by cypress test");
+      cy.get("#author").type("Cypress In-built Tester");
+      cy.get("#url").type("https://testingurl.com.np");
+      cy.get("#submit-btn").click();
+      cy.contains("Title added by cypress test");
+      cy.contains("Cypress In-built Tester");
+      cy.get(".notify").should("have.css", "color", "rgb(0, 128, 0)");
+      cy.get(".notify").should("have.css", "border-style", "solid");
+    });
+  });
 });
