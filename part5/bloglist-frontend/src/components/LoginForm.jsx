@@ -14,6 +14,7 @@ const Login = ({
           type="text"
           value={username}
           name="Username"
+          id="username"
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
@@ -23,6 +24,7 @@ const Login = ({
           type="password"
           value={password}
           name="Password"
+          id="password"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
