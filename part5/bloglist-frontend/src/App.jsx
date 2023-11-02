@@ -5,7 +5,6 @@ import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Toggable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import userService from "./services/user";
 import "./main.css";
 
 const App = () => {
@@ -30,7 +29,6 @@ const App = () => {
   useEffect(() => {
     const tokenExpiry = window.localStorage.getItem("tokenExpiry");
     if (tokenExpiry && new Date() > tokenExpiry) {
-      console.log("here");
       logOut("token-Expired");
     } else {
       const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
@@ -120,6 +118,7 @@ const App = () => {
 
   const updateLikes = async (blogToUpdate) => {
     blogToUpdate = { ...blogToUpdate, likes: blogToUpdate.likes + 1 };
+
     try {
       const response = await blogService.update(blogToUpdate.id, blogToUpdate);
       setBlogs(blogs.map((n) => (n.id !== response.id ? n : response)));

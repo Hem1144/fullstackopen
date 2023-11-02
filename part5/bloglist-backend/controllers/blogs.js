@@ -62,12 +62,16 @@ app.post("/", async (request, response, next) => {
     next(error);
   }
 });
-app.put("/:id", async (request, response) => {
-  const id = request.params.id;
-  const updatedBlogData = request.body;
+app.put("/:id", async (req, response, next) => {
+  const blog = {
+    title: req.body.title,
+    author: req.body.author,
+    url: req.body.url,
+    likes: req.body.likes,
+  };
 
   try {
-    const updatedBlog = await Blog.findByIdAndUpdate(id, updatedBlogData, {
+    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, {
       new: true,
     });
     response.json(updatedBlog);

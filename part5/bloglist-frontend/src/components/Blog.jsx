@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog, updateLikes, delBlog }) => {
+const Blog = ({ blog, updateLikes, delBlog, loggedInUser }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -24,8 +24,8 @@ const Blog = ({ blog, updateLikes, delBlog }) => {
           <br />
           URL: {blog.url}
           <br />
-          Likes: {blog.likes}{" "}
-          <button onClick={updateLikes} id="like-blog">
+          Likes: {blog.likes}
+          <button onClick={updateLikes} id="like-blog" className="like-btn">
             Like
           </button>
           <br />
@@ -33,13 +33,15 @@ const Blog = ({ blog, updateLikes, delBlog }) => {
           <br />
           {blog.users.name}
           <br />
-          <button
-            onClick={delBlog}
-            id="remove-blog"
-            style={{ backgroundColor: "blue", color: "white" }}
-          >
-            remove
-          </button>
+          {loggedInUser.username === blog.users.username && (
+            <button
+              onClick={delBlog}
+              id="remove-blog"
+              style={{ backgroundColor: "blue", color: "white" }}
+            >
+              remove
+            </button>
+          )}
         </p>
       </div>
     );
@@ -47,7 +49,10 @@ const Blog = ({ blog, updateLikes, delBlog }) => {
   return (
     <div style={blogStyle} className="blog-div">
       {blog.title} {blog.author}
-      <button onClick={() => setBlogToShow(blogToShow.concat(blog.id))}>
+      <button
+        onClick={() => setBlogToShow(blogToShow.concat(blog.id))}
+        className="show-btn"
+      >
         show
       </button>
     </div>
